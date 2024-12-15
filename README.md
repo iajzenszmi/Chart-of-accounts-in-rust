@@ -1,2 +1,2 @@
-# Chart-of-accounts-in-rust.
+# Chart-of-accounts-in-rust
 chart of accounts in Rust proframming language.
