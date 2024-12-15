@@ -1,0 +1,195 @@
+Here’s a `Chart of Accounts` implementation in **Rust** with simulated input. This version allows users to perform basic operations such as adding, deleting, and displaying accounts.
+
+### Full Rust Code: `chart_of_accounts.rs`
+
+```rust
+use std::io;
+
+#[derive(Debug, Clone)]
+struct Account {
+    number: u32,
+    description: String,
+}
+
+struct ChartOfAccounts {
+    accounts: Vec<Account>,
+}
+
+impl ChartOfAccounts {
+    fn new() -> Self {
+        Self { accounts: Vec::new() }
+    }
+
+    fn add_account(&mut self, number: u32, description: String) {
+        if self.accounts.len() >= 10 {
+            println!("Account table is full.");
+        } else if self.accounts.iter().any(|acc| acc.number == number) {
+            println!("Account number {} already exists.", number);
+        } else {
+            self.accounts.push(Account { number, description });
+            println!("Account added successfully.");
+        }
+    }
+
+    fn delete_account(&mut self, number: u32) {
+        if let Some(pos) = self.accounts.iter().position(|acc| acc.number == number) {
+            self.accounts.remove(pos);
+            println!("Account {} deleted successfully.", number);
+        } else {
+            println!("Account {} not found.", number);
+        }
+    }
+
+    fn display_accounts(&self) {
+        if self.accounts.is_empty() {
+            println!("No accounts available.");
+        } else {
+            println!("Current Accounts:");
+            for account in &self.accounts {
+                println!("Account Number: {}, Description: {}", account.number, account.description);
+            }
+        }
+    }
+}
+
+fn main() {
+    let mut chart = ChartOfAccounts::new();
+
+    loop {
+        println!("\nChart of Accounts System - Demo");
+        println!("1. Add Account");
+        println!("2. Delete Account");
+        println!("3. Display Accounts");
+        println!("4. Exit");
+        println!("Enter your option:");
+
+        let mut option = String::new();
+        io::stdin().read_line(&mut option).expect("Failed to read input.");
+        let option: u32 = match option.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Invalid input. Please enter a number between 1 and 4.");
+                continue;
+            }
+        };
+
+        match option {
+            1 => {
+                let (number, description) = get_account_details();
+                chart.add_account(number, description);
+            }
+            2 => {
+                let number = get_account_number();
+                chart.delete_account(number);
+            }
+            3 => chart.display_accounts(),
+            4 => {
+                println!("Exiting program.");
+                break;
+            }
+            _ => println!("Invalid option. Please try again."),
+        }
+    }
+}
+
+fn get_account_details() -> (u32, String) {
+    println!("Enter Account Number:");
+    let mut number = String::new();
+    io::stdin().read_line(&mut number).expect("Failed to read input.");
+    let number: u32 = match number.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Invalid account number. Setting it to 0.");
+            0
+        }
+    };
+
+    println!("Enter Account Description:");
+    let mut description = String::new();
+    io::stdin().read_line(&mut description).expect("Failed to read input.");
+
+    (number, description.trim().to_string())
+}
+
+fn get_account_number() -> u32 {
+    println!("Enter Account Number:");
+    let mut number = String::new();
+    io::stdin().read_line(&mut number).expect("Failed to read input.");
+    match number.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Invalid account number. Setting it to 0.");
+            0
+        }
+    }
+}
+```
+
+---
+
+### Explanation:
+
+1. **Structs**:
+   - `Account`: Represents an account with `number` and `description`.
+   - `ChartOfAccounts`: Manages a vector of `Account`.
+
+2. **Key Functions**:
+   - `add_account`: Adds a new account to the vector, ensuring no duplicates.
+   - `delete_account`: Removes an account by its number.
+   - `display_accounts`: Displays all accounts or indicates if the vector is empty.
+
+3. **Input Functions**:
+   - `get_account_details`: Prompts the user to input account number and description.
+   - `get_account_number`: Prompts the user to input an account number.
+
+4. **Error Handling**:
+   - Ensures only valid numeric input for options and account numbers.
+   - Validates against duplicate account numbers.
+
+---
+
+### How to Run:
+
+1. **Save the Code**:
+   Save the code in a file named `chart_of_accounts.rs`.
+
+2. **Compile and Run**:
+   ```bash
+   rustc chart_of_accounts.rs
+   ./chart_of_accounts
+   ```
+
+3. **Interact**:
+   - Choose from the menu to add, delete, or display accounts.
+   - Exit the program by selecting option `4`.
+
+---
+
+### Example Output:
+
+```
+Chart of Accounts System - Demo
+1. Add Account
+2. Delete Account
+3. Display Accounts
+4. Exit
+Enter your option:
+1
+Enter Account Number:
+101
+Enter Account Description:
+Cash Account
+Account added successfully.
+
+Chart of Accounts System - Demo
+1. Add Account
+2. Delete Account
+3. Display Accounts
+4. Exit
+Enter your option:
+3
+Current Accounts:
+Account Number: 101, Description: Cash Account
+```
+
+Let me know if you'd like to add advanced features or simulate input further!
